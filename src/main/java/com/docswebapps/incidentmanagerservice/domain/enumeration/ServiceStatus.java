@@ -1,5 +1,5 @@
 package com.docswebapps.incidentmanagerservice.domain.enumeration;
 
-public enum SystemStatus {
+public enum ServiceStatus {
     GREEN, AMBER, RED;
 }

@@ -1,6 +1,6 @@
 package com.docswebapps.incidentmanagerservice.domain;
 
-import com.docswebapps.incidentmanagerservice.domain.enumeration.SystemStatus;
+import com.docswebapps.incidentmanagerservice.domain.enumeration.ServiceStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class ServiceDetails extends Base {
     private String serviceName;
 
     @Column(nullable = false)
-    private SystemStatus status;
+    private ServiceStatus status;
 
     @Column(nullable = false)
     private Long previousIncidentCount;
@@ -37,7 +37,7 @@ public class ServiceDetails extends Base {
                           Timestamp lastModifiedDate,
                           Long version,
                           String serviceName,
-                          SystemStatus status,
+                          ServiceStatus status,
                           Long previousIncidentCount,
                           Timestamp lastIncidentDate,
                           Collection<IncidentDetails> incidents) {

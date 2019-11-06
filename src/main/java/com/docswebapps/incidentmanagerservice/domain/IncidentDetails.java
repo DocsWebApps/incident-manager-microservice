@@ -7,11 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -28,8 +26,14 @@ public class IncidentDetails extends Base {
     @Column(nullable = false)
     private Severity severity;
 
+    @Column
+    private String description;
+
     @ManyToOne
     private ServiceDetails serviceDetails;
+
+    @OneToMany(mappedBy = "incidentDetails", fetch = FetchType.LAZY)
+    private Collection<IncidentUpdates> incidentUpdates;
 
     @Builder
     public IncidentDetails(Long id,
@@ -39,12 +43,16 @@ public class IncidentDetails extends Base {
                            Timestamp closedDate,
                            IssueStatus status,
                            Severity severity,
-                           ServiceDetails serviceDetails) {
+                           String description,
+                           ServiceDetails serviceDetails,
+                           Collection<IncidentUpdates> incidentUpdates) {
         super(id, createdDate, lastModifiedDate,version);
         this.closedDate = closedDate;
         this.status = status;
         this.severity = severity;
+        this.description = description;
         this.serviceDetails = serviceDetails;
+        this.incidentUpdates = incidentUpdates;
     }
 
 }
