@@ -2,7 +2,7 @@ package com.docswebapps.incidentmanagerservice.bootstrap;
 
 import com.docswebapps.incidentmanagerservice.domain.IncidentDetails;
 import com.docswebapps.incidentmanagerservice.domain.ServiceDetails;
-import com.docswebapps.incidentmanagerservice.domain.enumeration.IssueStatus;
+import com.docswebapps.incidentmanagerservice.domain.enumeration.IncidentStatus;
 import com.docswebapps.incidentmanagerservice.domain.enumeration.Severity;
 import com.docswebapps.incidentmanagerservice.repository.IncidentDetailsRepository;
 import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
@@ -30,7 +30,7 @@ public class IncidentDetailsBaseDataInsert implements CommandLineRunner {
         if(incidentDetailsRepository.count() == 0 && service.isPresent()) {
             this.incidentDetailsRepository.save(IncidentDetails.builder()
                     .severity(Severity.P2)
-                    .status(IssueStatus.OPEN)
+                    .status(IncidentStatus.OPEN)
                     .serviceDetails(service.get())
                     .build());
         }

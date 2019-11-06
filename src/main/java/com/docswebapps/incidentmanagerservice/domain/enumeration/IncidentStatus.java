@@ -1,5 +1,5 @@
 package com.docswebapps.incidentmanagerservice.domain.enumeration;
 
-public enum IssueStatus {
+public enum IncidentStatus {
     OPEN, CLOSED;
 }

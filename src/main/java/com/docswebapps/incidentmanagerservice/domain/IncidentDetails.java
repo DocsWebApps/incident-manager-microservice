@@ -1,6 +1,6 @@
 package com.docswebapps.incidentmanagerservice.domain;
 
-import com.docswebapps.incidentmanagerservice.domain.enumeration.IssueStatus;
+import com.docswebapps.incidentmanagerservice.domain.enumeration.IncidentStatus;
 import com.docswebapps.incidentmanagerservice.domain.enumeration.Severity;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class IncidentDetails extends Base {
     private Timestamp closedDate;
 
     @Column(nullable = false)
-    private IssueStatus status;
+    private IncidentStatus status;
 
     @Column(nullable = false)
     private Severity severity;
@@ -41,7 +41,7 @@ public class IncidentDetails extends Base {
                            Timestamp lastModifiedDate,
                            Long version,
                            Timestamp closedDate,
-                           IssueStatus status,
+                           IncidentStatus status,
                            Severity severity,
                            String description,
                            ServiceDetails serviceDetails,
