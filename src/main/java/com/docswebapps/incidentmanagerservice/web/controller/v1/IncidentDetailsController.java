@@ -1,5 +1,6 @@
 package com.docswebapps.incidentmanagerservice.web.controller.v1;
 
+import com.docswebapps.incidentmanagerservice.service.IncidentDetailsService;
 import com.docswebapps.incidentmanagerservice.web.model.IncidentDetailsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +17,21 @@ import java.net.URISyntaxException;
 @Slf4j
 @RequestMapping("/api/v1/incident-details")
 public class IncidentDetailsController {
-//    private final IncientServiceDetails incidentDetailsService;
-//
-//    public IncidentDetailsController(IncientServiceDetails incidentDetailsService) {
-//        this.incidentDetailsService = incidentDetailsService;
-//    }
+    private final IncidentDetailsService incidentDetailsService;
+
+    public IncidentDetailsController(IncidentDetailsService incidentDetailsService) {
+        this.incidentDetailsService = incidentDetailsService;
+    }
 
     @PostMapping
     public ResponseEntity createIncident(@Valid @RequestBody IncidentDetailsDto incidentDetailsDto) throws URISyntaxException {
         log.info("IncidentDetailsController: createIncident() method");
-        Long returnId = 1L; // this.incidentDetailsService.saveIncident(incidentDetailsDto);
-        if (returnId > 0) {
-            URI uri = new URI("/api/v1/incident-details/" + returnId);
+        Long returnId = this.incidentDetailsService.saveIncident(incidentDetailsDto);
+        if (returnId.intValue() > 0) {
+            URI uri = new URI("/api/v1/incident-details/" + returnId.toString());
             return ResponseEntity.created(uri).build();
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
     }
 
