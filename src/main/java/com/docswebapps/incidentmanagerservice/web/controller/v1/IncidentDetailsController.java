@@ -31,7 +31,7 @@ public class IncidentDetailsController {
             URI uri = new URI("/api/v1/incident-details/" + returnId.toString());
             return ResponseEntity.created(uri).build();
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Error occurred creating incident. Contact an administrator!");
         }
     }
 

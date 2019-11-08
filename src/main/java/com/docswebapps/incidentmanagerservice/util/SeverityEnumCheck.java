@@ -15,6 +15,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = SeverityEnumCheckValidator.class)
+
+/* Usage:
+ * Check for subset of Enum...
+ * @SeverityEnumCheck(anyOf = {Severity.P2, Severity.P1})
+ * private Severity severity
+ */
 public @interface SeverityEnumCheck {
     Severity[] anyOf();
     String message() default "must be any of {anyOf}";
