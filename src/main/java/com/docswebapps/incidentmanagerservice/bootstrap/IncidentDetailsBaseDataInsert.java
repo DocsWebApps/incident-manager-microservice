@@ -7,13 +7,11 @@ import com.docswebapps.incidentmanagerservice.domain.enumeration.Severity;
 import com.docswebapps.incidentmanagerservice.repository.IncidentDetailsRepository;
 import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Component
-@Order(2)
+//@Component
+//@Order(2)
 public class IncidentDetailsBaseDataInsert implements CommandLineRunner {
     private final IncidentDetailsRepository incidentDetailsRepository;
     private final ServiceDetailsRepository serviceDetailsRepository;
