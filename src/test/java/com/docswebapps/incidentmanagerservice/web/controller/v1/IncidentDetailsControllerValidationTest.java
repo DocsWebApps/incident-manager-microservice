@@ -109,6 +109,11 @@ class IncidentDetailsControllerValidationTest {
                 "{\"description\":\"Test Incident\",\"severity\":\"P4\",\"serviceName\":\"\"}"
                 , status().isBadRequest());
 
+        // Sad Path: status not null
+        this.createIncidentPost(
+                "{\"description\":\"Test Incident\",\"status\":\"OPEN\",\"severity\":\"P4\",\"serviceName\":\"PRODUCTION\"}"
+                , status().isBadRequest());
+
         // Sad Path: Simulate DB issue
         when(incidentDetailsService.saveIncident(any(IncidentDetailsDto.class))).thenReturn(-1L);
         this.createIncidentPost(
