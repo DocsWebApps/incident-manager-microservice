@@ -2,6 +2,7 @@ package com.docswebapps.incidentmanagerservice.service.impl;
 
 import com.docswebapps.incidentmanagerservice.domain.IncidentDetails;
 import com.docswebapps.incidentmanagerservice.domain.ServiceDetails;
+import com.docswebapps.incidentmanagerservice.domain.enumeration.IncidentStatus;
 import com.docswebapps.incidentmanagerservice.repository.IncidentDetailsRepository;
 import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
 import com.docswebapps.incidentmanagerservice.service.IncidentDetailsService;
@@ -26,11 +27,11 @@ public class IncidentDetailsServiceImpl implements IncidentDetailsService {
     @Override
     public Long saveIncident(IncidentDetailsDto incidentDetailsDto) {
         log.info("IncidentDetailsImpl: saveIncident() method {}", incidentDetailsDto.getSeverity());
-        Optional<ServiceDetails> serviceDetails = this.serviceDetailsRepository.findByServiceName(incidentDetailsDto.getServiceName());
+        Optional<ServiceDetails> serviceDetails = this.serviceDetailsRepository.findByServiceName(incidentDetailsDto.getServiceName().toString());
         if (serviceDetails.isPresent()) {
             IncidentDetails newIncident = IncidentDetails.builder()
                     .description(incidentDetailsDto.getDescription())
-                    .status(incidentDetailsDto.getStatus())
+                    .status(IncidentStatus.OPEN)
                     .severity(incidentDetailsDto.getSeverity())
                     .serviceDetails(serviceDetails.get())
                     .build();

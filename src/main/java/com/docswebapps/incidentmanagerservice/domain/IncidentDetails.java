@@ -20,10 +20,10 @@ public class IncidentDetails extends Base {
     private Timestamp closedDate;
 
     @Column(nullable = false)
-    private IncidentStatus status;
+    private String status;
 
     @Column(nullable = false)
-    private Severity severity;
+    private String severity;
 
     @Column
     private String description;
@@ -46,8 +46,8 @@ public class IncidentDetails extends Base {
                            Collection<IncidentUpdates> incidentUpdates) {
         super(id, createdDate, lastModifiedDate,version);
         this.closedDate = closedDate;
-        this.status = status;
-        this.severity = severity;
+        this.status = status.toString();
+        this.severity = severity.toString();
         this.description = description;
         this.serviceDetails = serviceDetails;
         this.incidentUpdates = incidentUpdates;

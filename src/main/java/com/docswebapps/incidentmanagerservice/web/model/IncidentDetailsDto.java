@@ -1,6 +1,7 @@
 package com.docswebapps.incidentmanagerservice.web.model;
 
 import com.docswebapps.incidentmanagerservice.domain.enumeration.IncidentStatus;
+import com.docswebapps.incidentmanagerservice.domain.enumeration.ServiceName;
 import com.docswebapps.incidentmanagerservice.domain.enumeration.Severity;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class IncidentDetailsDto extends BaseDto {
     @NotBlank
     private String description;
 
-    @NotNull
+    @Null
     private IncidentStatus status;
 
     @NotNull
@@ -28,12 +29,12 @@ public class IncidentDetailsDto extends BaseDto {
     @Null
     private OffsetDateTime closedDate;
 
-    @NotBlank
-    private String serviceName;
+    @NotNull
+    private ServiceName serviceName;
 
     @Builder
     public IncidentDetailsDto(Long id, String description, IncidentStatus status, Severity severity,
-                              OffsetDateTime closedDate, String serviceName, OffsetDateTime createdDate,
+                              OffsetDateTime closedDate, ServiceName serviceName, OffsetDateTime createdDate,
                               OffsetDateTime lastModifiedDate) {
         super(id, createdDate, lastModifiedDate);
         this.description = description;

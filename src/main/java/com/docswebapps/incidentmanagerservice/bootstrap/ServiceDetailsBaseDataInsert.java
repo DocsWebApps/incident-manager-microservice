@@ -1,6 +1,7 @@
 package com.docswebapps.incidentmanagerservice.bootstrap;
 
 import com.docswebapps.incidentmanagerservice.domain.ServiceDetails;
+import com.docswebapps.incidentmanagerservice.domain.enumeration.ServiceName;
 import com.docswebapps.incidentmanagerservice.domain.enumeration.ServiceStatus;
 import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -19,19 +20,19 @@ public class ServiceDetailsBaseDataInsert implements CommandLineRunner {
     public void run(String... args) {
         if(serviceDetailsRepository.count() == 0) {
             this.serviceDetailsRepository.save(ServiceDetails.builder()
-                    .serviceName("Production")
+                    .serviceName(ServiceName.PRODUCTION)
                     .status(ServiceStatus.GREEN)
                     .previousIncidentCount(0L)
                     .build());
 
             this.serviceDetailsRepository.save(ServiceDetails.builder()
-                    .serviceName("Pre-Production")
+                    .serviceName(ServiceName.PRE_PRODUCTION)
                     .status(ServiceStatus.GREEN)
                     .previousIncidentCount(0L)
                     .build());
 
             this.serviceDetailsRepository.save(ServiceDetails.builder()
-                    .serviceName("Fix On Fail")
+                    .serviceName(ServiceName.FIX_ON_FAIL)
                     .status(ServiceStatus.GREEN)
                     .previousIncidentCount(0L)
                     .build());
