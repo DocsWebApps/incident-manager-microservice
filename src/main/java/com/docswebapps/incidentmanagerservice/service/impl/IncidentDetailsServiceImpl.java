@@ -26,7 +26,7 @@ public class IncidentDetailsServiceImpl implements IncidentDetailsService {
 
     @Override
     public Long saveIncident(IncidentDetailsDto incidentDetailsDto) {
-        log.info("IncidentDetailsImpl: saveIncident() method {}", incidentDetailsDto.getSeverity());
+        log.info("IncidentDetailsServiceImpl: saveIncident() method invoked");
         Optional<ServiceDetails> serviceDetails = this.serviceDetailsRepository.findByServiceName(incidentDetailsDto.getServiceName().toString());
         if (serviceDetails.isPresent()) {
             IncidentDetails newIncident = IncidentDetails.builder()

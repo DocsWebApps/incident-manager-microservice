@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // Validation Tests for the IncidentDetailsController
 @WebMvcTest(IncidentDetailsController.class)
-class IncidentDetailsControllerValidationTest {
+class IncidentDetailsControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -30,10 +30,10 @@ class IncidentDetailsControllerValidationTest {
     @MockBean
     IncidentDetailsService incidentDetailsService;
 
-    final static String URL="/api/v1/incident-details";
+    private final static String URL="/api/v1/incident-details";
 
     @Test
-    @DisplayName("POST Parameter Validation")
+    @DisplayName("IncidentDetailsControllerTest: POST parameter validation")
     void postValidation() throws Exception {
         when(incidentDetailsService.saveIncident(any(IncidentDetailsDto.class))).thenReturn(1L);
 
