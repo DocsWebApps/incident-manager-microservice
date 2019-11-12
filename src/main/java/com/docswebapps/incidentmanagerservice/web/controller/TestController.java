@@ -14,7 +14,7 @@ public class TestController {
     private String testValue;
 
     @GetMapping
-    public ResponseEntity getTes() {
+    public ResponseEntity getTest() {
         return ResponseEntity.ok().body(testValue);
     }
 }
