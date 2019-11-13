@@ -24,16 +24,16 @@ class ServiceDetailsRepositoryTest {
     @Autowired
     ServiceDetailsRepository serviceDetailsRepository;
 
+    private ServiceDetails serviceDetails = ServiceDetails.builder()
+            .serviceName(ServiceName.PRODUCTION)
+            .status(ServiceStatus.GREEN)
+            .previousIncidentCount(0L)
+            .lastIncidentDate(Timestamp.valueOf(LocalDateTime.now()))
+            .build();
+
     @Test
     @DisplayName("ServiceDetailsRepositoryTest:test findByServiceName()")
     void testFindByServiceName() {
-        ServiceDetails serviceDetails = ServiceDetails.builder()
-                .serviceName(ServiceName.PRODUCTION)
-                .status(ServiceStatus.GREEN)
-                .previousIncidentCount(0L)
-                .lastIncidentDate(Timestamp.valueOf(LocalDateTime.now()))
-                .build();
-
         entityManager.persist(serviceDetails);
         entityManager.flush();
 

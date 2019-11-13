@@ -1,6 +1,7 @@
 package com.docswebapps.incidentmanagerservice.config;
 
 import com.docswebapps.incidentmanagerservice.util.ServiceMessageDetails;
+import com.docswebapps.incidentmanagerservice.util.UpdateServiceDetailsStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,4 +11,7 @@ public class UtilBeansConfig {
     public ServiceMessageDetails serviceMessageDetails() {
         return new ServiceMessageDetails();
     }
+
+    @Bean
+    public UpdateServiceDetailsStatus updateServiceDetailsStatus() { return new UpdateServiceDetailsStatus(); }
 }
