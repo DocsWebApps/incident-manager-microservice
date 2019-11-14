@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 class UpdateServiceDetailsStatusTest {
-
     @Autowired
     ServiceDetailsRepository serviceDetailsRepository;
 

@@ -8,6 +8,7 @@ import com.docswebapps.incidentmanagerservice.domain.enumeration.ServiceStatus;
 import com.docswebapps.incidentmanagerservice.domain.enumeration.Severity;
 import com.docswebapps.incidentmanagerservice.repository.IncidentDetailsRepository;
 import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
+import com.docswebapps.incidentmanagerservice.util.UpdateServiceDetailsStatus;
 import com.docswebapps.incidentmanagerservice.web.model.IncidentDetailsDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,9 @@ class IncidentDetailsServiceImplTest {
 
     @Mock
     IncidentDetailsRepository incidentDetailsRepository;
+
+    @Mock
+    UpdateServiceDetailsStatus updateServiceDetailsStatus;
 
     @InjectMocks
     IncidentDetailsServiceImpl incidentDetailsService;

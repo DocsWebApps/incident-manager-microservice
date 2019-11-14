@@ -24,7 +24,7 @@ public class ServiceMessageDetails {
     public List<String> getMessageDetails(ServiceDetails serviceDetails) {
         int incidentCount = incidentDetailsRepository.countByStatusAndServiceDetails(IncidentStatus.CLOSED.toString(), serviceDetails);
         Timestamp lastIncidentDate = serviceDetails.getLastIncidentDate();
-        BiConsumer<String, String> messageList = (message, colour) -> { this.messageDetails.add(0, message); this.messageDetails.add(1, colour);};
+        BiConsumer<String, String> messageList = (message, messageColour) -> { this.messageDetails.add(0, message); this.messageDetails.add(1, messageColour);};
 
         if (incidentCount > 0) {
             messageList.accept(incidentCount + " incidents(s) in the last 24 hours", "system-red");
