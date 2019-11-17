@@ -15,6 +15,6 @@ public interface IncidentDetailsMapper {
    @Mapping(target = "id", ignore = true)
    IncidentDetails dtoToEntity(IncidentDetailsDto incidentDetailsDto);
 
-   @Mapping(target = "serviceName", source = "")
+   @Mapping(source = "serviceDetails.serviceName", target = "serviceName")
    IncidentDetailsDto entityToDto(IncidentDetails incidentDetails);
 }

@@ -6,12 +6,15 @@ import com.docswebapps.incidentmanagerservice.domain.enumeration.IncidentStatus;
 import com.docswebapps.incidentmanagerservice.repository.IncidentDetailsRepository;
 import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
 import com.docswebapps.incidentmanagerservice.service.IncidentDetailsService;
+import com.docswebapps.incidentmanagerservice.service.mappers.IncidentDetailsMapper;
 import com.docswebapps.incidentmanagerservice.util.UpdateServiceDetailsStatus;
 import com.docswebapps.incidentmanagerservice.web.model.IncidentDetailsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -19,13 +22,30 @@ public class IncidentDetailsServiceImpl implements IncidentDetailsService {
     private final IncidentDetailsRepository incidentDetailsRepository;
     private final ServiceDetailsRepository serviceDetailsRepository;
     private final UpdateServiceDetailsStatus updateServiceDetailsStatus;
+    private final IncidentDetailsMapper incidentDetailsMapper;
 
     public IncidentDetailsServiceImpl(IncidentDetailsRepository incidentDetailsRepository,
                                       ServiceDetailsRepository serviceDetailsRepository,
-                                      UpdateServiceDetailsStatus updateServiceDetailsStatus) {
+                                      UpdateServiceDetailsStatus updateServiceDetailsStatus,
+                                      IncidentDetailsMapper incidentDetailsMapper) {
         this.incidentDetailsRepository = incidentDetailsRepository;
         this.serviceDetailsRepository = serviceDetailsRepository;
         this.updateServiceDetailsStatus = updateServiceDetailsStatus;
+        this.incidentDetailsMapper = incidentDetailsMapper;
+    }
+
+    @Override
+    public Optional<IncidentDetailsDto> getIncidentById(Long id) {
+        return this.incidentDetailsRepository.findById(id)
+                .map(incidentDetailsMapper::entityToDto);
+    }
+
+    @Override
+    public List<IncidentDetailsDto> getAllIncidents() {
+        return this.incidentDetailsRepository.findAll()
+                .stream()
+                .map(incidentDetailsMapper::entityToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
