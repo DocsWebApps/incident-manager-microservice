@@ -9,4 +9,5 @@ public interface IncidentDetailsService {
     Long saveIncident(IncidentDetailsDto incidentDetailsDto);
     List<IncidentDetailsDto> getAllIncidents();
     Optional<IncidentDetailsDto> getIncidentById(Long id);
+    List<IncidentDetailsDto>  getAllIncidentsForService(String serviceName);
 }

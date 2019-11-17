@@ -12,6 +12,7 @@ import com.docswebapps.incidentmanagerservice.web.model.IncidentDetailsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,13 +36,26 @@ public class IncidentDetailsServiceImpl implements IncidentDetailsService {
     }
 
     @Override
+    public List<IncidentDetailsDto> getAllIncidentsForService(String serviceName) {
+        Optional<ServiceDetails> serviceDetailsOpt = this.serviceDetailsRepository.findByServiceName(serviceName);
+        List<IncidentDetailsDto> incidentList = new ArrayList<>();
+        return serviceDetailsOpt.map(serviceDetails -> this.incidentDetailsRepository
+                .findAllByServiceDetails(serviceDetails)
+                .stream()
+                .map(incidentDetailsMapper::entityToDto)
+                .collect(Collectors.toList())).orElse(incidentList);
+    }
+
+    @Override
     public Optional<IncidentDetailsDto> getIncidentById(Long id) {
+        log.info("IncidentDetailsServiceImpl: getIncidentById() method invoked");
         return this.incidentDetailsRepository.findById(id)
                 .map(incidentDetailsMapper::entityToDto);
     }
 
     @Override
     public List<IncidentDetailsDto> getAllIncidents() {
+        log.info("IncidentDetailsServiceImpl: getAllIncidents() method invoked");
         return this.incidentDetailsRepository.findAll()
                 .stream()
                 .map(incidentDetailsMapper::entityToDto)

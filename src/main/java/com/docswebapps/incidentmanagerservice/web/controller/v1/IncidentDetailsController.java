@@ -28,7 +28,6 @@ public class IncidentDetailsController {
         return ResponseEntity.ok().body(allIncidents);
     }
 
-    // Get One incident
     @GetMapping("/{id}")
     public ResponseEntity getIncidentById(@PathVariable("id") Long id) {
         Optional<IncidentDetailsDto> incidentOpt = this.incidentDetailsService.getIncidentById(id);
@@ -37,7 +36,11 @@ public class IncidentDetailsController {
                 : ResponseEntity.notFound().build();
     }
 
-    // Get all incidents for a service
+    @GetMapping("/service/{name}")
+    public ResponseEntity getAllIncidentsForService(@PathVariable("name") String name) {
+        List<IncidentDetailsDto> allIncidents = this.incidentDetailsService.getAllIncidentsForService(name);
+        return ResponseEntity.ok().body(allIncidents);
+    }
 
     // Update an incident
 
