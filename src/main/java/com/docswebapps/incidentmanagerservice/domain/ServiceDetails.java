@@ -32,6 +32,10 @@ public class ServiceDetails extends Base {
     @OneToMany(mappedBy = "serviceDetails", fetch = FetchType.LAZY)
     private Collection<IncidentDetails> incidents;
 
+    public void incrementPreviousIncidentCount() {
+        this.previousIncidentCount++;
+    }
+
     @Builder
     public ServiceDetails(Long id,
                           Timestamp createdDate,

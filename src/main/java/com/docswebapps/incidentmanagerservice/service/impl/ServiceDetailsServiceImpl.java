@@ -34,8 +34,7 @@ public class ServiceDetailsServiceImpl implements ServiceDetailsService {
         List<ServiceDetails> serviceDetailsList = serviceDetailsRepository.findAll();
         List<ServiceDetailsDto> serviceDetailsDtoList = new ArrayList<ServiceDetailsDto>();
         serviceDetailsList.forEach(serviceDetail -> {
-            List<String> messageDetails= serviceMessageDetails.getMessageDetails(serviceDetail);
-
+            List<String> messageDetails = serviceMessageDetails.getMessageDetails(serviceDetail);
             serviceDetailsDtoList.add(ServiceDetailsDto.builder()
                     .id(serviceDetail.getId())
                     .serviceName(ServiceName.valueOf(serviceDetail.getServiceName()))
@@ -49,7 +48,6 @@ public class ServiceDetailsServiceImpl implements ServiceDetailsService {
                     .build()
                     );
         });
-
         return serviceDetailsDtoList;
     }
 }
