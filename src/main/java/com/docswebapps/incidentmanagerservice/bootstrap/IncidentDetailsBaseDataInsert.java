@@ -9,11 +9,10 @@ import com.docswebapps.incidentmanagerservice.repository.IncidentDetailsReposito
 import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Component
+//@Component
 @Order(2)
 public class IncidentDetailsBaseDataInsert implements CommandLineRunner {
     private final IncidentDetailsRepository incidentDetailsRepository;
