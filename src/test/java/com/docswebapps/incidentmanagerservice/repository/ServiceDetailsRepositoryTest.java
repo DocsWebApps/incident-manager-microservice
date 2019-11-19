@@ -32,7 +32,7 @@ class ServiceDetailsRepositoryTest {
             .build();
 
     @Test
-    @DisplayName("ServiceDetailsRepositoryTest:test findByServiceName()")
+    @DisplayName("ServiceDetailsRepositoryTest:test testFindByServiceName()")
     void testFindByServiceName() {
         entityManager.persist(serviceDetails);
         entityManager.flush();
