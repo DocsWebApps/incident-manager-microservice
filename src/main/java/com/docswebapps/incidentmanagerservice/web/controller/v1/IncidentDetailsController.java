@@ -26,7 +26,7 @@ public class IncidentDetailsController {
     public ResponseEntity getAllIncidents() {
         log.info("IncidentDetailsController: getAllIncidents() method");
         List<IncidentDetailsDto> allIncidents =  this.incidentDetailsService.getAllIncidents();
-        return allIncidents.size() > 0
+        return allIncidents.isEmpty()
                 ? ResponseEntity.ok().body(allIncidents)
                 : ResponseEntity.notFound().build();
     }
@@ -44,7 +44,7 @@ public class IncidentDetailsController {
     public ResponseEntity getAllIncidentsForService(@PathVariable("name") String name) {
         log.info("IncidentDetailsController: getAllIncidentsForService() method");
         List<IncidentDetailsDto> allIncidents = this.incidentDetailsService.getAllIncidentsForService(name);
-        return allIncidents.size() > 0
+        return allIncidents.isEmpty()
                 ? ResponseEntity.ok().body(allIncidents)
                 : ResponseEntity.notFound().build();
     }

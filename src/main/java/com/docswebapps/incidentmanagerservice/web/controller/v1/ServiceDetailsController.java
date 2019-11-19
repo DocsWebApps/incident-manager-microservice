@@ -24,7 +24,7 @@ public class ServiceDetailsController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Allow-Origin","*");
         List<ServiceDetailsDto> allServices = serviceDetailsService.getAllServiceDetails();
-        return allServices.size() > 0
+        return allServices.isEmpty()
                 ? ResponseEntity.ok().headers(headers).body(allServices)
                 : ResponseEntity.notFound().build();
     }

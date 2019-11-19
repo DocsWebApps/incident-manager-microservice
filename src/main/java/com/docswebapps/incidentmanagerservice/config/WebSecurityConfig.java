@@ -9,15 +9,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final static String INCIDENT_DETAILS_URL = "/api/v1/incident-details";
+    private final static String SERVICE_DETAILS_URL =  "/api/v1/service-details";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/api/v1/incident-details").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/incident-details/**").permitAll()
-                .antMatchers(HttpMethod.PUT,"/api/v1/incident-details/**").permitAll()
-                .antMatchers(HttpMethod.DELETE,"/api/v1/incident-details/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/test").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/service-details/**").permitAll()
+                .antMatchers(HttpMethod.POST,INCIDENT_DETAILS_URL).permitAll()
+                .antMatchers(HttpMethod.GET,INCIDENT_DETAILS_URL+"/**").permitAll()
+                .antMatchers(HttpMethod.PUT,INCIDENT_DETAILS_URL+"/**").permitAll()
+                .antMatchers(HttpMethod.DELETE,INCIDENT_DETAILS_URL+"/**").permitAll()
+                .antMatchers(HttpMethod.GET, SERVICE_DETAILS_URL+"/**").permitAll()
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().csrf().disable();
