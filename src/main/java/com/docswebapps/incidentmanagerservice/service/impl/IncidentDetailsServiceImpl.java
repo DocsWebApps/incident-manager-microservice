@@ -12,8 +12,6 @@ import com.docswebapps.incidentmanagerservice.web.model.IncidentDetailsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +38,7 @@ public class IncidentDetailsServiceImpl implements IncidentDetailsService {
     @Override
     public List<IncidentDetailsDto> getAllIncidentsForService(String serviceName) {
         log.info("IncidentDetailsServiceImpl: getAllIncidentsForService() method invoked");
-        Optional<ServiceDetails> serviceDetailsOpt = this.serviceDetailsRepository.findByServiceName(serviceName);
-        return serviceDetailsOpt.map(
+        return this.serviceDetailsRepository.findByServiceName(serviceName).map(
                 serviceDetails -> this.incidentDetailsRepository
                             .findAllByServiceDetails(serviceDetails)
                             .stream()
@@ -51,33 +48,43 @@ public class IncidentDetailsServiceImpl implements IncidentDetailsService {
     }
 
     @Override
-    public boolean deleteOrCloseIncident(Long id, String type) {
-        log.info("IncidentDetailsServiceImpl: deleteOrCloseIncident() method invoked");
-        IncidentDetails incidentDetails;
-        ServiceDetails serviceDetails;
-        LocalDateTime dateTimeNow = LocalDateTime.now();
-        Optional<IncidentDetails> incidentDetailsOpt = this.incidentDetailsRepository.findById(id);
-        if (type.equals("delete") && incidentDetailsOpt.isPresent()) {
-            incidentDetails = incidentDetailsOpt.get();
-            serviceDetails = this.serviceDetailsRepository.getOne(incidentDetails.getServiceDetails().getId());
-            this.incidentDetailsRepository.deleteById(id);
-            updateServiceDetailsStatus.setServiceDetailsStatus(serviceDetails);
-            return true;
-        } else if (type.equals("close") && incidentDetailsOpt.isPresent()) {
-            incidentDetails = incidentDetailsOpt.get();
-            serviceDetails = this.serviceDetailsRepository.getOne(incidentDetails.getServiceDetails().getId());
-            incidentDetails.setClosedDate(Timestamp.valueOf(dateTimeNow));
-            incidentDetails.setStatus(IncidentStatus.CLOSED.toString());
-            this.incidentDetailsRepository.save(incidentDetails);
-            serviceDetails.setLastIncidentDate(Timestamp.valueOf(dateTimeNow));
-            serviceDetails.incrementPreviousIncidentCount();
-            this.serviceDetailsRepository.save(serviceDetails);
-            updateServiceDetailsStatus.setServiceDetailsStatus(serviceDetails);
-            return true;
-        } else {
-            return false;
-        }
+    public boolean deleteIncident(Long id) {
+        return false;
     }
+
+    @Override
+    public boolean closeIncident(Long id) {
+        return false;
+    }
+
+//    @Override
+//    public boolean deleteOrCloseIncident(Long id, String type) {
+//        log.info("IncidentDetailsServiceImpl: deleteOrCloseIncident() method invoked");
+//        IncidentDetails incidentDetails;
+//        ServiceDetails serviceDetails;
+//        LocalDateTime dateTimeNow = LocalDateTime.now();
+//        Optional<IncidentDetails> incidentDetailsOpt = this.incidentDetailsRepository.findById(id);
+//        if (type.equals("delete") && incidentDetailsOpt.isPresent()) {
+//            incidentDetails = incidentDetailsOpt.get();
+//            serviceDetails = this.serviceDetailsRepository.getOne(incidentDetails.getServiceDetails().getId());
+//            this.incidentDetailsRepository.deleteById(id);
+//            updateServiceDetailsStatus.setServiceDetailsStatus(serviceDetails);
+//            return true;
+//        } else if (type.equals("close") && incidentDetailsOpt.isPresent()) {
+//            incidentDetails = incidentDetailsOpt.get();
+//            serviceDetails = this.serviceDetailsRepository.getOne(incidentDetails.getServiceDetails().getId());
+//            incidentDetails.setClosedDate(Timestamp.valueOf(dateTimeNow));
+//            incidentDetails.setStatus(IncidentStatus.CLOSED.toString());
+//            this.incidentDetailsRepository.save(incidentDetails);
+//            serviceDetails.setLastIncidentDate(Timestamp.valueOf(dateTimeNow));
+//            serviceDetails.incrementPreviousIncidentCount();
+//            this.serviceDetailsRepository.save(serviceDetails);
+//            updateServiceDetailsStatus.setServiceDetailsStatus(serviceDetails);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     @Override
     public boolean updateIncident(Long id, IncidentDetailsDto incidentDetailsDto) {

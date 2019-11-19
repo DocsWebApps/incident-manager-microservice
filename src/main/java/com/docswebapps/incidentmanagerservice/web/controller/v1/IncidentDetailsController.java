@@ -3,7 +3,6 @@ package com.docswebapps.incidentmanagerservice.web.controller.v1;
 import com.docswebapps.incidentmanagerservice.service.IncidentDetailsService;
 import com.docswebapps.incidentmanagerservice.web.model.IncidentDetailsDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +24,7 @@ public class IncidentDetailsController {
 
     @GetMapping
     public ResponseEntity getAllIncidents() {
-        log.info("IncidentDetailsController: getAllIncidents) method");
+        log.info("IncidentDetailsController: getAllIncidents() method");
         List<IncidentDetailsDto> allIncidents =  this.incidentDetailsService.getAllIncidents();
         return allIncidents.size() > 0
                 ? ResponseEntity.ok().body(allIncidents)
@@ -58,10 +57,19 @@ public class IncidentDetailsController {
                 : ResponseEntity.badRequest().body("Error updating incident. Contact an administrator!");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteOrCloseIncident(@PathVariable("id") Long id, @Param("type") String type) {
-        log.info("IncidentDetailsController: deleteOrCloseIncident() method");
-        return this.incidentDetailsService.deleteOrCloseIncident(id, type)
+    @DeleteMapping("/{id}/close")
+    public ResponseEntity closeIncident(@PathVariable("id") Long id) {
+        log.info("IncidentDetailsController: closeIncident() method");
+        return this.incidentDetailsService.closeIncident(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.badRequest().body("Error closing incident. Contact an administrator!");
+
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity deleteIncident(@PathVariable("id") Long id) {
+        log.info("IncidentDetailsController: deleteIncident() method");
+        return this.incidentDetailsService.deleteIncident(id)
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.badRequest().body("Error deleting incident. Contact an administrator!");
     }
@@ -70,12 +78,9 @@ public class IncidentDetailsController {
     public ResponseEntity createIncident(@Valid @RequestBody IncidentDetailsDto incidentDetailsDto) throws URISyntaxException {
         log.info("IncidentDetailsController: createIncident() method");
         Long returnId = this.incidentDetailsService.saveIncident(incidentDetailsDto);
-        if (returnId.intValue() > 0) {
-            URI uri = new URI("/api/v1/incident-details/" + returnId.toString());
-            return ResponseEntity.created(uri).build();
-        } else {
-            return ResponseEntity.badRequest().body("Error creating incident. Contact an administrator!");
-        }
+        return returnId.intValue() > 0
+                ? ResponseEntity.created(new URI("/api/v1/incident-details/" + returnId.toString())).build()
+                : ResponseEntity.badRequest().body("Error creating incident. Contact an administrator!");
     }
 
 }

@@ -10,6 +10,7 @@ public interface IncidentDetailsService {
     List<IncidentDetailsDto> getAllIncidents();
     Optional<IncidentDetailsDto> getIncidentById(Long id);
     List<IncidentDetailsDto>  getAllIncidentsForService(String serviceName);
-    boolean deleteOrCloseIncident(Long id, String type);
+    boolean deleteIncident(Long id);
+    boolean closeIncident(Long id);
     boolean updateIncident(Long id, IncidentDetailsDto incidentDetailsDto);
 }
