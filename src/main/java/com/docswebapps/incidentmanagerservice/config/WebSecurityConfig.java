@@ -9,8 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final static String INCIDENT_DETAILS_URL = "/api/v1/incident-details";
-    private final static String SERVICE_DETAILS_URL =  "/api/v1/service-details";
+    private static final String INCIDENT_DETAILS_URL = "/api/v1/incident-details";
+    private static final String SERVICE_DETAILS_URL =  "/api/v1/service-details";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
