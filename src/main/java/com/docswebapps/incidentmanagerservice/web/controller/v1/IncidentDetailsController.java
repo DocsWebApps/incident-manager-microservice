@@ -27,8 +27,8 @@ public class IncidentDetailsController {
         log.info("IncidentDetailsController: getAllIncidents() method");
         List<IncidentDetailsDto> allIncidents =  this.incidentDetailsService.getAllIncidents();
         return allIncidents.isEmpty()
-                ? ResponseEntity.ok().body(allIncidents)
-                : ResponseEntity.notFound().build();
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok().body(allIncidents);
     }
 
     @GetMapping("/{id}")
@@ -45,8 +45,8 @@ public class IncidentDetailsController {
         log.info("IncidentDetailsController: getAllIncidentsForService() method");
         List<IncidentDetailsDto> allIncidents = this.incidentDetailsService.getAllIncidentsForService(name);
         return allIncidents.isEmpty()
-                ? ResponseEntity.ok().body(allIncidents)
-                : ResponseEntity.notFound().build();
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok().body(allIncidents);
     }
 
     @PutMapping("/{id}")
