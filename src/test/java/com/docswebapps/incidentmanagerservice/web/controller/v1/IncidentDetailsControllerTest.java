@@ -47,8 +47,9 @@ class IncidentDetailsControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
-                    assertEquals(result.getResponse().getContentAsString(),
-                            "[{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}]");
+                    assertEquals("[{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}]",
+                            result.getResponse().getContentAsString()
+                            );
                 });
 
         when(this.incidentDetailsService.getAllIncidentsForService(anyString()))
@@ -71,8 +72,8 @@ class IncidentDetailsControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
-                    assertEquals(result.getResponse().getContentAsString(),
-                            "{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}");
+                    assertEquals("{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}",
+                            result.getResponse().getContentAsString());
                 });
         // Sad Path
         when(this.incidentDetailsService.getIncidentById(anyLong()))
@@ -96,8 +97,8 @@ class IncidentDetailsControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
-                    assertEquals(result.getResponse().getContentAsString(),
-                            "[{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}]");
+                    assertEquals("[{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}]"
+                            , result.getResponse().getContentAsString());
                 });
 
         // Sad Path
@@ -124,7 +125,8 @@ class IncidentDetailsControllerTest {
                 .content("{\"description\":\"Test Incident\",\"severity\":\"P4\",\"serviceName\":\"PRODUCTION\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
-                    assertEquals(result.getResponse().getContentAsString(), "Error updating incident. Contact an administrator!");
+                    assertEquals("Error updating incident. Contact an administrator!"
+                            , result.getResponse().getContentAsString());
                 });
     }
 
@@ -140,7 +142,8 @@ class IncidentDetailsControllerTest {
         mockMvc.perform(delete(URL+"/1/close"))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
-                    assertEquals(result.getResponse().getContentAsString(), "Error closing incident. Contact an administrator!");
+                    assertEquals("Error closing incident. Contact an administrator!"
+                            , result.getResponse().getContentAsString());
                 });
     }
 
@@ -156,7 +159,8 @@ class IncidentDetailsControllerTest {
         mockMvc.perform(delete(URL+"/1/delete"))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> {
-                    assertEquals(result.getResponse().getContentAsString(), "Error deleting incident. Contact an administrator!");
+                    assertEquals("Error deleting incident. Contact an administrator!"
+                            , result.getResponse().getContentAsString());
         });
     }
 
