@@ -1,85 +1,96 @@
 package com.docswebapps.incidentmanagerservice.service.impl;
 
 import com.docswebapps.incidentmanagerservice.domain.IncidentDetails;
-import com.docswebapps.incidentmanagerservice.domain.ServiceDetails;
-import com.docswebapps.incidentmanagerservice.domain.enumeration.IncidentStatus;
 import com.docswebapps.incidentmanagerservice.domain.enumeration.ServiceName;
-import com.docswebapps.incidentmanagerservice.domain.enumeration.ServiceStatus;
-import com.docswebapps.incidentmanagerservice.domain.enumeration.Severity;
-import com.docswebapps.incidentmanagerservice.repository.IncidentDetailsRepository;
-import com.docswebapps.incidentmanagerservice.repository.ServiceDetailsRepository;
-import com.docswebapps.incidentmanagerservice.util.UpdateServiceDetailsStatus;
-import com.docswebapps.incidentmanagerservice.web.model.IncidentDetailsDto;
+import com.docswebapps.incidentmanagerservice.service.BaseDataMockTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class IncidentDetailsServiceImplTest {
-    @Mock
-    ServiceDetailsRepository serviceDetailsRepository;
+;
 
-    @Mock
-    IncidentDetailsRepository incidentDetailsRepository;
-
-    @Mock
-    UpdateServiceDetailsStatus updateServiceDetailsStatus;
-
-    @InjectMocks
-    IncidentDetailsServiceImpl incidentDetailsService;
-
-    private ServiceDetails serviceDetails = ServiceDetails.builder()
-            .id(1L)
-            .serviceName(ServiceName.PRODUCTION)
-            .previousIncidentCount(0L)
-            .status(ServiceStatus.GREEN)
-            .lastIncidentDate(null)
-            .createdDate(Timestamp.valueOf(LocalDateTime.now()))
-            .lastModifiedDate(Timestamp.valueOf(LocalDateTime.now()))
-            .version(0L)
-            .build();
-
-    private IncidentDetailsDto incidentDetailsDto = IncidentDetailsDto.builder()
-            .description("Test Incident")
-            .severity(Severity.P2)
-            .serviceName(ServiceName.valueOf(serviceDetails.getServiceName()))
-            .build();
-
-    private IncidentDetails incidentDetails = IncidentDetails.builder()
-            .id(1L)
-            .status(IncidentStatus.OPEN)
-            .severity(incidentDetailsDto.getSeverity())
-            .description(incidentDetailsDto.getDescription())
-            .serviceDetails(serviceDetails)
-            .closedDate(null)
-            .createdDate(Timestamp.valueOf(LocalDateTime.now()))
-            .lastModifiedDate(Timestamp.valueOf(LocalDateTime.now()))
-            .version(0L)
-            .build();
+@ExtendWith({MockitoExtension.class})
+class IncidentDetailsServiceImplTest extends BaseDataMockTest {
 
     @Test
-    @DisplayName("IncidentDetailsServiceImplTest: save() Happy Path")
-    void saveIncidentHappyPath() {
-        when(serviceDetailsRepository.findByServiceName(ServiceName.PRODUCTION.toString())).thenReturn(Optional.of(serviceDetails));
-        when(incidentDetailsRepository.save(any(IncidentDetails.class))).thenReturn(incidentDetails);
-        assertEquals(1L, incidentDetailsService.saveIncident(incidentDetailsDto), "IncidentDetailsServiceImplTest.saveIncidentHappyPath(): return values don't match");
+    @DisplayName("saveIncident()")
+    void saveIncident() {
+        // Happy Path
+        when(this.serviceDetailsRepository.findByServiceName(ServiceName.PRE_PRODUCTION.toString())).thenReturn(Optional.of(serviceList.get(1)));
+        when(incidentDetailsRepository.save(any(IncidentDetails.class))).thenReturn(incidentList.get(2));
+        assertEquals(3L, incidentDetailsService.saveIncident(incidentDetailsDto), "saveIncidentHappyPath(): return values don't match");
+
+        // Sad Path
+        when(serviceDetailsRepository.findByServiceName(ServiceName.PRE_PRODUCTION.toString())).thenReturn(Optional.empty());
+        assertEquals(-1L, incidentDetailsService.saveIncident(incidentDetailsDto), "saveIncidentSadPath(): return values don't match");
     }
 
     @Test
-    @DisplayName("IncidentDetailsServiceImplTest: save() Sad Path :-(")
-    void saveIncidentSadPath() {
-        when(serviceDetailsRepository.findByServiceName(ServiceName.PRODUCTION.toString())).thenReturn(Optional.empty());
-        assertEquals(-1L, incidentDetailsService.saveIncident(incidentDetailsDto), "IncidentDetailsServiceImplTest.saveIncidentSadPath(): return values don't match");
+    @DisplayName("getAllIncidentsForService()")
+    void getAllIncidentsForService() {
+        // Happy Path
+        lenient().when(this.serviceDetailsRepository.findByServiceName(ServiceName.PRODUCTION.toString())).thenReturn(Optional.of(serviceList.get(0)));
+        when(this.incidentDetailsRepository.findAllByServiceDetails(serviceList.get(0))).thenReturn(Arrays.asList(incidentList.get(0), incidentList.get(1)));
+        assertEquals(2, this.incidentDetailsService.getAllIncidentsForService(ServiceName.PRODUCTION.toString()).size());
+
+        // Sad Path
+        lenient().when(this.serviceDetailsRepository.findByServiceName(ServiceName.PRODUCTION.toString())).thenReturn(Optional.empty());
+        assertEquals(0, this.incidentDetailsService.getAllIncidentsForService(ServiceName.PRODUCTION.toString()).size());
+    }
+
+    @Test
+    @DisplayName("deleteIncident()")
+    void deleteIncident() {
+        // Happy Path
+        lenient().when(this.incidentDetailsRepository.findById(anyLong())).thenReturn(Optional.of(incidentList.get(0)));
+        assertTrue(this.incidentDetailsService.deleteIncident(incidentList.get(0).getId()));
+
+        // Sad Path
+        lenient().when(this.incidentDetailsRepository.findById(anyLong())).thenReturn(Optional.empty());
+        assertFalse(this.incidentDetailsService.deleteIncident(incidentList.get(0).getId()));
+    }
+
+    @Test
+    @DisplayName("closeIncident()")
+    void closeIncident() {
+        // Happy Path
+        lenient().when(this.incidentDetailsRepository.findById(anyLong())).thenReturn(Optional.of(incidentList.get(0)));
+        assertTrue(this.incidentDetailsService.closeIncident(incidentList.get(0).getId()));
+
+        // Sad Path
+        lenient().when(this.incidentDetailsRepository.findById(anyLong())).thenReturn(Optional.empty());
+        assertFalse(this.incidentDetailsService.closeIncident(incidentList.get(0).getId()));
+    }
+
+    @Test
+    void updateIncident() {
+        // Happy Path
+        lenient().when(this.incidentDetailsRepository.findById(anyLong())).thenReturn(Optional.of(incidentList.get(0)));
+        assertTrue(this.incidentDetailsService.updateIncident(incidentList.get(0).getId(), incidentDetailsDto));
+
+        // Sad Path
+        lenient().when(this.incidentDetailsRepository.findById(anyLong())).thenReturn(Optional.empty());
+        assertFalse(this.incidentDetailsService.updateIncident(incidentList.get(0).getId(), incidentDetailsDto));
+    }
+
+    @Test
+    void getIncidentById() {
+        // Happy Path - will return null since mapper is mocked
+        when(this.incidentDetailsRepository.findById(anyLong())).thenReturn(Optional.of(incidentList.get(0)));
+        assertFalse(this.incidentDetailsService.getIncidentById(1L).isPresent());
+    }
+
+    @Test
+    void getAllIncidents() {
+        // Happy Path
+        when(this.incidentDetailsRepository.findAll()).thenReturn(incidentList);
+        assertEquals(4, this.incidentDetailsService.getAllIncidents().size());
     }
 }

@@ -32,10 +32,10 @@ public class ServiceDetailsServiceImpl implements ServiceDetailsService {
     @Override
     public List<ServiceDetailsDto> getAllServiceDetails() {
         log.info("ServiceDetailsServiceImpl: getAllServiceDetails() method");
-        List<ServiceDetails> serviceDetailsList = serviceDetailsRepository.findAll();
+        List<ServiceDetails> serviceDetailsList = this.serviceDetailsRepository.findAll();
         List<ServiceDetailsDto> serviceDetailsDtoList = new ArrayList<>();
         serviceDetailsList.forEach(serviceDetail -> {
-            List<String> messageDetails = serviceMessageDetails.getMessageDetails(serviceDetail);
+            List<String> messageDetails = this.serviceMessageDetails.getMessageDetails(serviceDetail);
             serviceDetailsDtoList.add(ServiceDetailsDto.builder()
                     .id(serviceDetail.getId())
                     .serviceName(ServiceName.valueOf(serviceDetail.getServiceName()))

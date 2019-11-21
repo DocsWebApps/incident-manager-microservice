@@ -80,9 +80,8 @@ public class IncidentDetailsServiceImpl implements IncidentDetailsService {
     @Override
     public boolean updateIncident(Long id, IncidentDetailsDto incidentDetailsDto) {
         log.info("IncidentDetailsServiceImpl: updateIncident() method invoked");
-        Optional<IncidentDetails> incidentDetailsOpt = this.incidentDetailsRepository.findById(id);
-        return incidentDetailsOpt.map(
-              incidentDetails -> {
+        return this.incidentDetailsRepository.findById(id)
+                .map(incidentDetails -> {
                     incidentDetails.setDescription(incidentDetailsDto.getDescription());
                     incidentDetails.setSeverity(incidentDetailsDto.getSeverity().toString());
                     this.incidentDetailsRepository.save(incidentDetails);

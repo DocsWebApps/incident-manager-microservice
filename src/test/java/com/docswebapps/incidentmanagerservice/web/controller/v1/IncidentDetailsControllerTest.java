@@ -13,17 +13,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// Validation Tests for the IncidentDetailsController
 @WebMvcTest(IncidentDetailsController.class)
 class IncidentDetailsControllerTest {
-
     @Autowired
     MockMvc mockMvc;
 
@@ -33,10 +35,135 @@ class IncidentDetailsControllerTest {
     private final static String URL="/api/v1/incident-details";
 
     @Test
-    @DisplayName("IncidentDetailsControllerTest: POST parameter validation")
-    void postValidation() throws Exception {
-        when(incidentDetailsService.saveIncident(any(IncidentDetailsDto.class))).thenReturn(1L);
+    @DisplayName("getAllIncidentsForService()")
+    void getAllIncidentsForService() throws Exception {
+        // Happy Path
+        when(this.incidentDetailsService.getAllIncidentsForService(anyString()))
+            .thenReturn(Collections.singletonList(IncidentDetailsDto.builder()
+            .id(100L)
+            .build()));
 
+        mockMvc.perform(get(URL+"/service/production")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    assertEquals(result.getResponse().getContentAsString(),
+                            "[{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}]");
+                });
+
+        when(this.incidentDetailsService.getAllIncidentsForService(anyString()))
+                .thenReturn(new ArrayList<>());
+
+        mockMvc.perform(get(URL+"/service/production")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("getIncidentById()")
+    void getIncidentById() throws Exception {
+        // Happy Path
+        when(this.incidentDetailsService.getIncidentById(anyLong()))
+                .thenReturn(Optional.of(IncidentDetailsDto.builder()
+                        .id(100L).build()));
+
+        mockMvc.perform(get(URL+"/1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    assertEquals(result.getResponse().getContentAsString(),
+                            "{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}");
+                });
+        // Sad Path
+        when(this.incidentDetailsService.getIncidentById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        mockMvc.perform(get(URL+"/1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("getAllIncidents()")
+    void getAllIncidents() throws Exception {
+        // Happy Path
+        when(this.incidentDetailsService.getAllIncidents())
+                .thenReturn(Collections.singletonList(IncidentDetailsDto.builder()
+                    .id(100L)
+                    .build()));
+
+        mockMvc.perform(get(URL)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    assertEquals(result.getResponse().getContentAsString(),
+                            "[{\"id\":100,\"createdDate\":null,\"lastModifiedDate\":null,\"description\":null,\"status\":null,\"severity\":null,\"closedDate\":null,\"serviceName\":null}]");
+                });
+
+        // Sad Path
+        when(this.incidentDetailsService.getAllIncidents()).thenReturn(new ArrayList<>());
+        mockMvc.perform(get(URL)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("updateIncident()")
+    void updateIncident() throws Exception {
+        // Happy Path
+        when(incidentDetailsService.updateIncident(anyLong(), any(IncidentDetailsDto.class))).thenReturn(true);
+        mockMvc.perform(put(URL+"/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"description\":\"Test Incident\",\"severity\":\"P4\",\"serviceName\":\"PRODUCTION\"}"))
+                .andExpect(status().isNoContent());
+
+        // Sad Path
+        when(incidentDetailsService.updateIncident(anyLong(), any(IncidentDetailsDto.class))).thenReturn(false);
+        mockMvc.perform(put(URL+"/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"description\":\"Test Incident\",\"severity\":\"P4\",\"serviceName\":\"PRODUCTION\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    assertEquals(result.getResponse().getContentAsString(), "Error updating incident. Contact an administrator!");
+                });
+    }
+
+    @Test
+    @DisplayName("closeIncident()")
+    void closeIncident() throws Exception {
+        // Happy Path
+        when(incidentDetailsService.closeIncident(anyLong())).thenReturn(true);
+        mockMvc.perform(delete(URL+"/1/close")).andExpect(status().isNoContent());
+
+        // Sad Path
+        when(incidentDetailsService.closeIncident(anyLong())).thenReturn(false);
+        mockMvc.perform(delete(URL+"/1/close"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    assertEquals(result.getResponse().getContentAsString(), "Error closing incident. Contact an administrator!");
+                });
+    }
+
+    @Test
+    @DisplayName("deleteIncident()")
+    void deleteIncident() throws Exception {
+        // Happy Path
+        when(incidentDetailsService.deleteIncident(anyLong())).thenReturn(true);
+        mockMvc.perform(delete(URL+"/1/delete")).andExpect(status().isNoContent());
+
+        // Sad Path
+        when(incidentDetailsService.deleteIncident(anyLong())).thenReturn(false);
+        mockMvc.perform(delete(URL+"/1/delete"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    assertEquals(result.getResponse().getContentAsString(), "Error deleting incident. Contact an administrator!");
+        });
+    }
+
+    @Test
+    @DisplayName("createIncident()")
+    void createIncident() throws Exception {
+        when(incidentDetailsService.saveIncident(any(IncidentDetailsDto.class))).thenReturn(1L);
         // Happy path : All valid service names
         Arrays.asList(ServiceName.values())
                 .forEach(serviceName -> {
@@ -60,6 +187,14 @@ class IncidentDetailsControllerTest {
                     }
                 });
 
+         // Check the number of service method invocations is 7
+        verify(incidentDetailsService,times(7)).saveIncident(any(IncidentDetailsDto.class));
+    }
+
+    @Test
+    @DisplayName("dtoValidationTest()")
+    void dtoValidationTest() throws Exception {
+        when(incidentDetailsService.saveIncident(any(IncidentDetailsDto.class))).thenReturn(1L);
         // Sad Path: NotNull id
         this.createIncidentPost(
                 "{\"id\":\"1\",\"description\":\"Test Incident\",\"severity\":\"P4\",\"serviceName\":\"PRODUCTION\"}"
@@ -111,8 +246,8 @@ class IncidentDetailsControllerTest {
                 "{\"description\":\"Test Incident\",\"severity\":\"P4\",\"serviceName\":\"PRODUCTION\"}"
                 , status().isBadRequest());
 
-         // Check the number of service method invocations is 8
-        verify(incidentDetailsService,times(8)).saveIncident(any(IncidentDetailsDto.class));
+        // Check the number of service method invocations is 0, all should return isBadRequest()
+        verify(incidentDetailsService,times(1)).saveIncident(any(IncidentDetailsDto.class));
     }
 
     void createIncidentPost(String jsonRequest, ResultMatcher result) throws Exception {
