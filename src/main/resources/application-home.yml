@@ -1,0 +1,17 @@
+# Set application name and datasource
+spring:
+  datasource:
+    url: ${HOME_DB_URL}
+    username: ${HOME_ADMIN_USERNAME}
+    password: ${HOME_ADMIN_PASSWORD}
+
+## Set logging to debug/trace
+logging:
+  level:
+    org:
+      springframwork: debug
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace

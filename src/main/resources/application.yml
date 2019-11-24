@@ -1,0 +1,29 @@
+# Set server port
+server:
+  port: ${LOCAL_TOMCAT_SERVER_PORT}
+
+## Set up Eureka server
+eureka:
+  client:
+    service-url:
+      defaultZone: ${LOCAL_EUREKA_SERVER}
+
+# Set application name and datasource
+spring:
+  application:
+    name: incident-manager-service
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+## Set logging to info
+logging:
+  level:
+    org:
+      springframwork: info
+      hibernate:
+        SQL: info
+        type:
+          descriptor:
+            sql: info
