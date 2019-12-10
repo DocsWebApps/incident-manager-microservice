@@ -1,5 +1,0 @@
----
-# Set application name and datasource
-spring:
-  application:
-    name: incident-manager-service

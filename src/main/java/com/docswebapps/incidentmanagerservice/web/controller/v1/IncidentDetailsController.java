@@ -23,7 +23,7 @@ public class IncidentDetailsController {
     }
 
     @GetMapping
-    public ResponseEntity getAllIncidents() {
+    public ResponseEntity<List<IncidentDetailsDto>> getAllIncidents() {
         log.info("IncidentDetailsController: getAllIncidents() method");
         List<IncidentDetailsDto> allIncidents =  this.incidentDetailsService.getAllIncidents();
         return allIncidents.isEmpty()
@@ -32,16 +32,16 @@ public class IncidentDetailsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getIncidentById(@PathVariable("id") Long id) {
+    public ResponseEntity<IncidentDetailsDto> getIncidentById(@PathVariable("id") Long id) {
         log.info("IncidentDetailsController: getIncidentById() method");
         Optional<IncidentDetailsDto> incidentOpt = this.incidentDetailsService.getIncidentById(id);
-        return incidentOpt.isPresent()
-                ? ResponseEntity.ok().body(incidentOpt.get())
-                : ResponseEntity.notFound().build();
+        return incidentOpt
+                .map(incidentDetailsDto -> ResponseEntity.ok().body(incidentDetailsDto))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/service/{name}")
-    public ResponseEntity getAllIncidentsForService(@PathVariable("name") String name) {
+    public ResponseEntity<List<IncidentDetailsDto>> getAllIncidentsForService(@PathVariable("name") String name) {
         log.info("IncidentDetailsController: getAllIncidentsForService() method");
         List<IncidentDetailsDto> allIncidents = this.incidentDetailsService.getAllIncidentsForService(name);
         return allIncidents.isEmpty()
@@ -50,7 +50,7 @@ public class IncidentDetailsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateIncident(@PathVariable("id") Long id, @Valid @RequestBody IncidentDetailsDto incidentDetailsDto) {
+    public ResponseEntity<String> updateIncident(@PathVariable("id") Long id, @Valid @RequestBody IncidentDetailsDto incidentDetailsDto) {
         log.info("IncidentDetailsController: updateIncident() method");
         return this.incidentDetailsService.updateIncident(id, incidentDetailsDto)
                 ? ResponseEntity.noContent().build()
@@ -58,7 +58,7 @@ public class IncidentDetailsController {
     }
 
     @DeleteMapping("/{id}/close")
-    public ResponseEntity closeIncident(@PathVariable("id") Long id) {
+    public ResponseEntity<String> closeIncident(@PathVariable("id") Long id) {
         log.info("IncidentDetailsController: closeIncident() method");
         return this.incidentDetailsService.closeIncident(id)
                 ? ResponseEntity.noContent().build()
@@ -67,7 +67,7 @@ public class IncidentDetailsController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity deleteIncident(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteIncident(@PathVariable("id") Long id) {
         log.info("IncidentDetailsController: deleteIncident() method");
         return this.incidentDetailsService.deleteIncident(id)
                 ? ResponseEntity.noContent().build()
@@ -75,7 +75,7 @@ public class IncidentDetailsController {
     }
 
     @PostMapping
-    public ResponseEntity createIncident(@Valid @RequestBody IncidentDetailsDto incidentDetailsDto) throws URISyntaxException {
+    public ResponseEntity<String> createIncident(@Valid @RequestBody IncidentDetailsDto incidentDetailsDto) throws URISyntaxException {
         log.info("IncidentDetailsController: createIncident() method");
         Long returnId = this.incidentDetailsService.saveIncident(incidentDetailsDto);
         return returnId.intValue() > 0

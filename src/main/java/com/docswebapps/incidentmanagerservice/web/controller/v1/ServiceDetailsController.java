@@ -22,7 +22,7 @@ public class ServiceDetailsController {
     }
 
     @GetMapping
-    public ResponseEntity getAllServiceDetails() {
+    public ResponseEntity<List<ServiceDetailsDto>> getAllServiceDetails() {
         log.info("ServiceDetailsController: getAllServiceDetails() method");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Allow-Origin","*");
